@@ -12,8 +12,9 @@ class Miner:
         'cache-control': "no-cache"
         }
     
-    def __init__(self, uf, datafolder=""):
+    def __init__(self, uf, save=True, datafolder=""):
         self.uf = uf
+        self.save = save
         self.dataFolder = datafolder       
         if self.dataFolder:
             if not os.path.exists(self.dataFolder):  
@@ -75,8 +76,13 @@ class Miner:
             result = self.__coreMiner(response.text)
             if not result:
                 data = self.remove_dupe_dicts(data)
-                self.__dumpJsonl(data, os.path.join(self.dataFolder, self.uf + ".jsonl"))
                 break
             data += result
             pagini += qtdrow
             pagfim += qtdrow
+
+        if self.save:
+            self.__dumpJsonl(data, os.path.join(self.dataFolder, self.uf + ".jsonl"))
+            return []
+        else:
+            return data
