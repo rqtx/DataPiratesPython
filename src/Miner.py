@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import os.path
+import hashlib
 
 class Miner:
     __PAYLOAD = "UF={uf}&qtdrow={qtdrow}&pagini={pagini}&pagfim={pagfim}"
@@ -32,7 +33,7 @@ class Miner:
         
         for line in citys[2:]:
             record = line.find_all('td')
-            data.append(self.__createDictionary(0, record[0].get_text(), record[1].get_text()))
+            data.append(self.__createDictionary(record[0].get_text(), record[1].get_text()))
         return data
     
     def __dumpJsonl(self, data, output_path, append=False):
@@ -46,7 +47,8 @@ class Miner:
                 f.write(json_record + '\n')
         print('Wrote {} records to {}'.format(len(data), output_path))
 
-    def __createDictionary(self, id, localidade, fcep):
+    def __createDictionary(self, localidade, fcep):
+        id = hashlib.md5(bytes(localidade + fcep, encoding='utf-8')).hexdigest()
         return {"id": id, "localidade": localidade, "faixa de cep": fcep}
 
     def __requestPage(self, method, url, payload, headers):
