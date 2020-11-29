@@ -21,5 +21,8 @@ help: ## This help.
 run: ## Run script
 	docker run --rm -v $$PWD:/app -w /app --entrypoint "./run.sh" python:3.7-slim
 
+test: ## Run tests
+	docker run --rm -v $$PWD:/app -w /app --entrypoint "./test.sh" python:3.7-slim
+
 debug: ## Run bash to troubleshooting
 	docker run --rm -i -v $$PWD:/app -w /app --entrypoint "bash" python:3.7-slim

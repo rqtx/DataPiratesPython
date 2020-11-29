@@ -1,2 +1,4 @@
 # Local development dependencies go here
 -r base.txt
+
+pytest==6.1.2
